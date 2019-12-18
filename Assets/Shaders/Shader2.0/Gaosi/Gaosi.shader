@@ -1,13 +1,15 @@
-﻿Shader "Shader2.0/Rotate"
+﻿Shader "Shader2.0/Gaosi"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _Speed("Speed",float) = 20
+        _Ambient("模糊程度",float)=0.001
     }
     SubShader
     {
-        Blend SrcAlpha OneMinusSrcAlpha
+        // No culling or depth
+        Cull Off ZWrite Off ZTest Always
+
         Pass
         {
             CGPROGRAM
@@ -37,27 +39,21 @@
             }
 
             sampler2D _MainTex;
-            float _Speed;
-
+            float _Ambient;
             fixed4 frag (v2f i) : SV_Target
             {
-                //1.先将uv平移到原点(让图片中心与原点重合)
-                float2 pianyi=(0.5,0.5);
                 float2 tempUV=i.uv;
-                tempUV -= pianyi;
+                fixed4 col = tex2D(_MainTex, i.uv);
+                //当前像素左侧0.001的点
+                fixed4 col2=tex2D(_MainTex,tempUV+float2(-_Ambient,0));
+                fixed4 col3=tex2D(_MainTex,tempUV+float2(_Ambient,0));
+                //当前像素下方0.001的点
+                fixed4 col4=tex2D(_MainTex,tempUV+float2(0,-_Ambient));
+                fixed4 col5=tex2D(_MainTex,tempUV+float2(0,_Ambient));
+                col=(col+col2+col3+col4+col5)/5.0;
                 
-                //距离圆心超过0.5的点渲染为透明
-                if(length(tempUV)>0.5){
-                    return fixed4(0,0,0,0);
-                }
-                float2 finalUV=0;
-                float angle=_Time.x*_Speed;
-                //2.确定是按照z轴旋转，选取旋转公式
-                finalUV.x=tempUV.x * cos(angle) - tempUV.y*sin(angle);
-                finalUV.y=tempUV.x * sin(angle) + tempUV.y*cos(angle);
-                //3.将uv还原到以前的位置
-                finalUV += pianyi;
-                fixed4 col = tex2D(_MainTex, finalUV);
+                // just invert the colors
+                // col.rgb = 1 - col.rgb;
                 return col;
             }
             ENDCG

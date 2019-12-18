@@ -1,12 +1,13 @@
-﻿Shader "Shader2.0/Rotate"
+﻿Shader "Shader2.0/Alpha"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _Speed("Speed",float) = 20
+        _AlphaMin("最小透明度",float) = 0.1
     }
     SubShader
     {
+        //打开2.0的透明通道
         Blend SrcAlpha OneMinusSrcAlpha
         Pass
         {
@@ -37,28 +38,17 @@
             }
 
             sampler2D _MainTex;
-            float _Speed;
+            float _AlphaMin;
 
             fixed4 frag (v2f i) : SV_Target
             {
-                //1.先将uv平移到原点(让图片中心与原点重合)
-                float2 pianyi=(0.5,0.5);
-                float2 tempUV=i.uv;
-                tempUV -= pianyi;
-                
-                //距离圆心超过0.5的点渲染为透明
-                if(length(tempUV)>0.5){
+                fixed4 col = tex2D(_MainTex, i.uv);
+                //直接在片段着色器中判断alpha值
+                if(col.a<_AlphaMin){
+                    return fixed4(0,0,0,0);
                     return fixed4(0,0,0,0);
                 }
-                float2 finalUV=0;
-                float angle=_Time.x*_Speed;
-                //2.确定是按照z轴旋转，选取旋转公式
-                finalUV.x=tempUV.x * cos(angle) - tempUV.y*sin(angle);
-                finalUV.y=tempUV.x * sin(angle) + tempUV.y*cos(angle);
-                //3.将uv还原到以前的位置
-                finalUV += pianyi;
-                fixed4 col = tex2D(_MainTex, finalUV);
-                return col;
+                else return col;
             }
             ENDCG
         }

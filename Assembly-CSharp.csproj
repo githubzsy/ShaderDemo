@@ -63,9 +63,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Shaders\Shader2.0\Gaosi\Gaosi.cs" />
     <Compile Include="Assets\Shaders\Shader2.0\Shader2.0Matrix\TestMatrix.cs" />
+    <None Include="Assets\Shaders\Shader1.0\Stencil\Front.shader" />
     <None Include="Assets\Shaders\Shader2.0\Shader2.0Struct\Struct.shader" />
+    <None Include="Assets\Shaders\Offset\OffsetGreen.shader" />
+    <None Include="Assets\Shaders\Shader1.0\Stencil\Back.shader" />
+    <None Include="Assets\Shaders\Shader1.0\Alpha\Alpha.shader" />
+    <None Include="Assets\Shaders\Offset\OffsetRed.shader" />
+    <None Include="Assets\Shaders\Shader1.0\Depth\ZWriteDemo\ZWriteDemo.shader" />
+    <None Include="Assets\Shaders\Shader1.0\Stencil\Middle.shader" />
+    <None Include="Assets\Shaders\Shader2.0\AlphaTest\Alpha.shader" />
+    <None Include="Assets\Shaders\Shader2.0\Outline\Outline.shader" />
     <None Include="Assets\Shaders\Shader1.0\Fragment\Fragment.shader" />
+    <None Include="Assets\Shaders\Shader2.0\Gaosi\Gaosi.shader" />
     <None Include="Assets\Shaders\Shader2.0\River\River.shader" />
     <None Include="Assets\Shaders\Test.shader" />
     <None Include="Assets\Shaders\Shader1.0\Vertex\TestVertex.shader" />
